@@ -1,0 +1,6 @@
+spring.cloud.discovery.client.simple.instances:
+  app:
+    - uri: http://${APP_HOST:localhost}:9080
+      metadata:
+        management:
+          context-path: /actuator

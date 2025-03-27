@@ -1,0 +1,20 @@
+
+spring.application.name: spring-boot-admin
+
+server.servlet.context-path: /app-admin
+server.tomcat.redirect-context-root: false
+server.forward-headers-strategy: native
+
+spring:
+  boot:
+    admin:
+      monitor:
+        status-interval: 30000
+        status-lifetime: 30000
+        info-interval: 3m
+        info-lifetime: 3m
+
+      instance-auth:
+        enabled: false
+
+#debug: true
