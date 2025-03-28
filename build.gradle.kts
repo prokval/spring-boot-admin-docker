@@ -24,6 +24,11 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("de.codecentric:spring-boot-admin-starter-server")
     implementation("org.springframework.cloud:spring-cloud-starter")
+    implementation("org.springframework.boot:spring-boot-starter-security")
+    // OAuth2 Client for login redirects
+    implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
+    // Resource server for API protection
+    //implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
 }
 
 dependencyManagement {
@@ -31,8 +36,4 @@ dependencyManagement {
         mavenBom("de.codecentric:spring-boot-admin-dependencies:${property("springBootAdminVersion")}")
         mavenBom("org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion")
     }
-}
-
-tasks.withType<Test> {
-    useJUnitPlatform()
 }

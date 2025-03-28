@@ -1,0 +1,33 @@
+# To make this work ensure Keycloak realm configured as following:
+# - Go to Clients -> <clientId> -> Settings, turn on "Standard Flow Enabled", specify "Valid Redirect URIs" so that it
+#   include your app's URL. Typically just put "*" there.
+# - Go to Clients -> <clientId> -> Scope, assign roles you want to see in your app, or just enable "Full Scope Allowed"
+# - Go to Clients -> <clientId> -> Client Scopes, ensure it has 'roles' in Assigned Default Client Scopes
+# - Go to Client Scopes -> roles -> Mappers -> realm roles, enable "Add to ID token"
+keycloak:
+  serverUrl: ${KEYCLOAK_SERVER_URL:http://localhost:18080/auth}
+  realm: ${KEYCLOAK_REALM:master}
+  clientId: ${KEYCLOAK_CLIENT_ID:admin-cli}
+
+
+spring:
+  security:
+    oauth2:
+      # Client configuration (for login redirect)
+      client:
+        registration:
+          keycloak:
+            client-id: ${keycloak.clientId}
+#            client-secret: your-client-secret
+            scope: openid
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            provider: keycloak
+        provider:
+          keycloak:
+            issuer-uri: ${keycloak.serverUrl}/realms/${keycloak.realm}
+            authorization-uri: ${keycloak.serverUrl}/realms/${keycloak.realm}/protocol/openid-connect/auth
+            token-uri: ${keycloak.serverUrl}/realms/${keycloak.realm}/protocol/openid-connect/token
+            jwk-set-uri: ${keycloak.serverUrl}/realms/${keycloak.realm}/protocol/openid-connect/certs
+            user-info-uri: ${keycloak.serverUrl}/realms/${keycloak.realm}/protocol/openid-connect/userinfo
+            user-name-attribute: preferred_username

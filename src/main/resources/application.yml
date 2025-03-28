@@ -1,9 +1,10 @@
-
 spring.application.name: spring-boot-admin
 
-server.servlet.context-path: /app-admin
-server.tomcat.redirect-context-root: false
-server.forward-headers-strategy: native
+server:
+  servlet.context-path: /app-admin
+  tomcat.redirect-context-root: false
+  forward-headers-strategy: native
+  shutdown: immediate
 
 spring:
   boot:

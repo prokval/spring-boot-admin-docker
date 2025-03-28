@@ -35,7 +35,7 @@ COPY docker/application.yml ./config/
 EXPOSE 8080
 
 # Set environment variables (customize as needed)
-ENV SPRING_PROFILES_ACTIVE=prod
+ENV SPRING_PROFILES_ACTIVE=prod,keycloak
 ENV JAVA_OPTS="-Xmx512m -Xms256m"
 
 # Set the entry point to run the application
