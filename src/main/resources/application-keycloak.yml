@@ -19,8 +19,8 @@ spring:
         registration:
           keycloak:
             client-id: ${keycloak.clientId}
-#            client-secret: your-client-secret
-            scope: openid
+            #client-secret: your-client-secret
+            scope: openid,profile
             authorization-grant-type: authorization_code
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
             provider: keycloak
@@ -36,4 +36,4 @@ spring:
             user-name-attribute: preferred_username
 
             # Used in ConfiguredOidcClientInitiatedLogoutSuccessHandler
-            logout-uri: ${keycloak.serverUrl}/realms/${keycloak.realm}/protocol/openid-connect/logout
+            logout-uri: ${keycloak.authUrl}/realms/${keycloak.realm}/protocol/openid-connect/logout
