@@ -5,6 +5,7 @@
 # - Go to Clients -> <clientId> -> Client Scopes, ensure it has 'roles' in Assigned Default Client Scopes
 # - Go to Client Scopes -> roles -> Mappers -> realm roles, enable "Add to ID token"
 keycloak:
+  authUrl: ${KEYCLOAK_AUTH_URL:http://localhost:18080/auth}
   serverUrl: ${KEYCLOAK_SERVER_URL:http://localhost:18080/auth}
   realm: ${KEYCLOAK_REALM:master}
   clientId: ${KEYCLOAK_CLIENT_ID:admin-cli}
@@ -25,9 +26,14 @@ spring:
             provider: keycloak
         provider:
           keycloak:
-            issuer-uri: ${keycloak.serverUrl}/realms/${keycloak.realm}
-            authorization-uri: ${keycloak.serverUrl}/realms/${keycloak.realm}/protocol/openid-connect/auth
+            # Don't specify this to allow app to start without Keycloak accessible
+            #issuer-uri: ${keycloak.serverUrl}/realms/${keycloak.realm}
+
+            authorization-uri: ${keycloak.authUrl}/realms/${keycloak.realm}/protocol/openid-connect/auth
             token-uri: ${keycloak.serverUrl}/realms/${keycloak.realm}/protocol/openid-connect/token
             jwk-set-uri: ${keycloak.serverUrl}/realms/${keycloak.realm}/protocol/openid-connect/certs
             user-info-uri: ${keycloak.serverUrl}/realms/${keycloak.realm}/protocol/openid-connect/userinfo
             user-name-attribute: preferred_username
+
+            # Used in ConfiguredOidcClientInitiatedLogoutSuccessHandler
+            logout-uri: ${keycloak.serverUrl}/realms/${keycloak.realm}/protocol/openid-connect/logout

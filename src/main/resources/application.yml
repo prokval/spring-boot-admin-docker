@@ -19,3 +19,24 @@ spring:
         enabled: false
 
 #debug: true
+#logging:
+#  level:
+#    # Spring Security OAuth2 core classes
+#    org.springframework.security.oauth2: DEBUG
+#
+#    # Client registration and authentication flow
+#    org.springframework.security.oauth2.client: TRACE
+#
+#    # Token handling and validation
+#    org.springframework.security.oauth2.jwt: DEBUG
+#    org.springframework.security.oauth2.jose: DEBUG
+#
+#    # Web client requests
+#    org.springframework.web.client.RestTemplate: DEBUG
+#
+#    # HTTP traffic (very verbose)
+#    org.springframework.web: DEBUG
+#    org.apache.http: DEBUG
+#
+#    # Keycloak specific (if needed)
+#    org.keycloak: DEBUG

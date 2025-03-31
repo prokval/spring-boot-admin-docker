@@ -1,5 +1,7 @@
 package ru.drt.springbootadmin;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -8,7 +10,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
-import org.springframework.security.oauth2.client.oidc.web.logout.OidcClientInitiatedLogoutSuccessHandler;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.user.OidcUserAuthority;
@@ -27,9 +28,15 @@ import static java.util.function.Predicate.not;
 @Profile("keycloak")
 public class SecurityConfig {
 
+    @Autowired
+    private ClientRegistrationRepository clientRegistrationRepository;
+
+    @Value("${spring.security.oauth2.client.provider.keycloak.logout-uri}")
+    private String logoutUri;
+
     // Web Security (OAuth2 Client)
     @Bean
-    public SecurityFilterChain webFilterChain(HttpSecurity http, ClientRegistrationRepository clientRegistrationRepository) throws Exception {
+    public SecurityFilterChain webFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
                         .anyRequest().hasRole("ADMIN")
@@ -41,7 +48,7 @@ public class SecurityConfig {
                  */
                 .oauth2Login(oauth2 -> oauth2.defaultSuccessUrl("/", true))
                 .logout(logout -> logout
-                        .logoutSuccessHandler(oidcLogoutSuccessHandler(clientRegistrationRepository))
+                        .logoutSuccessHandler(oidcLogoutSuccessHandler())
                         .invalidateHttpSession(true)
                         .clearAuthentication(true)
                         .deleteCookies("JSESSIONID"))
@@ -49,8 +56,9 @@ public class SecurityConfig {
         return http.build();
     }
 
-    private static LogoutSuccessHandler oidcLogoutSuccessHandler(ClientRegistrationRepository clientRegistrationRepository) {
-        var logoutSuccessHandler = new OidcClientInitiatedLogoutSuccessHandler(clientRegistrationRepository);
+    private LogoutSuccessHandler oidcLogoutSuccessHandler() {
+        var logoutSuccessHandler = new ConfiguredOidcClientInitiatedLogoutSuccessHandler(clientRegistrationRepository);
+        logoutSuccessHandler.setEndSessionEndpointUri(logoutUri);
         logoutSuccessHandler.setPostLogoutRedirectUri("{baseUrl}/");
         return logoutSuccessHandler;
     }
